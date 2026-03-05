@@ -61,6 +61,8 @@ public class CreateServerService {
         return versions;
     }
 
+
+
     public String getVersionUrl(String VersionId){
         List<Version> versions = getOnlineVersions();
         for(Version version : versions){
@@ -81,6 +83,45 @@ public class CreateServerService {
         String downloadUrl  = tempDownloadUrl.getDownloads().getServer().getUrl();
         return downloadUrl;
     }
+
+    public String downloadVersion(String versionId) {
+
+        Path downloadPath = Paths.get("C:\\minecraft-server", versionId);
+
+        try {
+
+            Files.createDirectories(downloadPath);
+
+            String versionUrl = getVersionUrl(versionId);
+            System.out.println("Downloading version " + versionUrl);
+            if(versionUrl == null) return "Failure";
+
+            String downloadUrl = getDownloadUrl(versionUrl);
+            System.out.println("Downloading version " + versionUrl);
+            if(downloadUrl == null) return "Failure";
+
+            try (InputStream inputStream = new URL(downloadUrl).openStream()) {
+
+                Files.copy(
+                        inputStream,
+                        downloadPath.resolve("server.jar"),
+                        StandardCopyOption.REPLACE_EXISTING
+                );
+            }
+            System.out.println("Successs");
+            return "Success";
+
+        } catch (Exception e) {
+
+            try {
+                Files.deleteIfExists(downloadPath);
+            } catch (IOException ignored) {}
+
+            return "Failure";
+        }
+    }
+
+
 
     public String startServer(String versionId) throws IOException, InterruptedException {
         try{
@@ -154,6 +195,33 @@ public class CreateServerService {
         }
     }
 
+    public String agreeToEula(String versionId) throws IOException {
+
+        Path path = Paths.get("C:\\minecraft-server", versionId, "eula.txt");
+
+        if (!Files.exists(path)) {
+            return "Failure";
+        }
+
+        List<String> lines = new ArrayList<>(Files.readAllLines(path));
+
+        boolean agree = false;
+
+        for (int i = 0; i < lines.size(); i++) {
+
+            if (lines.get(i).startsWith("eula")) {
+                lines.set(i, "eula=true");
+                agree = true;
+                break;
+            }
+
+        }
+
+        Files.write(path, lines);
+
+        return agree ? "Success" : "Failure";
+    }
+
     public String startServerForFirstTime(String versionId) {
 
         boolean eula = false;
@@ -213,66 +281,6 @@ public class CreateServerService {
         }
     }
 
-    public String agreeToEula(String versionId) throws IOException {
 
-        Path path = Paths.get("C:\\minecraft-server", versionId, "eula.txt");
 
-        if (!Files.exists(path)) {
-            return "Failure";
-        }
-
-        List<String> lines = new ArrayList<>(Files.readAllLines(path));
-
-        boolean agree = false;
-
-        for (int i = 0; i < lines.size(); i++) {
-
-            if (lines.get(i).startsWith("eula")) {
-                lines.set(i, "eula=true");
-                agree = true;
-                break;
-            }
-
-        }
-
-        Files.write(path, lines);
-
-        return agree ? "Success" : "Failure";
-    }
-
-    public String downloadVersion(String versionId) {
-
-        Path downloadPath = Paths.get("C:\\minecraft-server", versionId);
-
-        try {
-
-            Files.createDirectories(downloadPath);
-
-            String versionUrl = getVersionUrl(versionId);
-            System.out.println("Downloading version " + versionUrl);
-            if(versionUrl == null) return "Failure";
-
-            String downloadUrl = getDownloadUrl(versionUrl);
-            System.out.println("Downloading version " + versionUrl);
-            if(downloadUrl == null) return "Failure";
-
-            try (InputStream inputStream = new URL(downloadUrl).openStream()) {
-
-                Files.copy(
-                        inputStream,
-                        downloadPath.resolve("server.jar"),
-                        StandardCopyOption.REPLACE_EXISTING
-                );
-            }
-            System.out.println("Successs");
-            return "Success";
-
-        } catch (Exception e) {
-
-            try {
-                Files.deleteIfExists(downloadPath);
-            } catch (IOException ignored) {}
-
-            return "Failure";
-        }
-    }}
+}

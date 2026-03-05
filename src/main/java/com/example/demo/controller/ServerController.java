@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
-import com.example.demo.service.CreateServerService;
-import com.example.demo.service.CreateWorldService;
-import com.example.demo.service.ServerManager;
-import com.example.demo.service.ServerServerice;
+import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +22,9 @@ public class ServerController {
 
     @Autowired
     private ServerManager serverManager;
+
+    @Autowired
+    private DashboardPropertiesService dashboardPropertiesService;
 
     @PostMapping("/servers")
     public void createServer(@RequestBody CreateServer createServer) {
@@ -70,5 +70,15 @@ public class ServerController {
     @GetMapping("/stop/{versionId}/{worldName}")
     public String stopServer(@PathVariable("versionId") String versionId, @PathVariable("worldName") String worldName) throws IOException {
         return serverManager.stopServer();
+    }
+
+    @GetMapping("/dashboard/{versionId}/{worldName}")
+    public World showDashboard(@PathVariable("versionId") String versionId, @PathVariable("worldName") String worldName) throws IOException {
+        return dashboardPropertiesService.getWorldProperties(versionId,worldName);
+    }
+
+    @PostMapping("/dashboard/{versionId}/{worldName}")
+    public String saveDashboard(@PathVariable("versionId") String versionId, @PathVariable("worldName") String worldName, @RequestBody World world) throws IOException {
+        return dashboardPropertiesService.setWorldProperties(world);
     }
 }

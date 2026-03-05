@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -10,6 +11,9 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class ServerManager {
+
+    @Autowired
+    private ConsoleSocketService consoleSocketService;
 
     private Process server;
 
@@ -59,6 +63,7 @@ public class ServerManager {
                     String l;
                     while ((l = reader.readLine()) != null) {
                         System.out.println("[SERVER] " + l);
+                        consoleSocketService.sendLog(l); // send to frontend
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -91,6 +96,7 @@ public class ServerManager {
             return "Failure";
         }
     }
+
     public String startServer(String versionId, String worldName) throws IOException {
         try{
 

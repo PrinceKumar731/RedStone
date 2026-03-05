@@ -76,6 +76,7 @@ public class CreateWorldService {
                 else if (lines.get(i).startsWith("spawn-protection="))
                     lines.set(i, "spawn-protection=" + world.getSpawnProtection());
             }
+
             Files.write(path, lines);
             System.out.println("Update props files.......");
             return "Success";
