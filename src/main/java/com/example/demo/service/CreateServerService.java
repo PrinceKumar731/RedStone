@@ -187,6 +187,10 @@ public class CreateServerService {
             version.setEula(eula);
             version.setWorlds(new ArrayList<>());
 
+            versions.add(version);
+
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, versions);
+
             return "Success";
 
         }catch (Exception ex){

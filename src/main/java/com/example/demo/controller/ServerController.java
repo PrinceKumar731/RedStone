@@ -26,6 +26,9 @@ public class ServerController {
     @Autowired
     private DashboardPropertiesService dashboardPropertiesService;
 
+    @Autowired
+    private DeleteService deleteService;
+
     @PostMapping("/servers")
     public void createServer(@RequestBody CreateServer createServer) {
         System.out.println(createServer);
@@ -80,5 +83,15 @@ public class ServerController {
     @PostMapping("/dashboard/{versionId}/{worldName}")
     public String saveDashboard(@PathVariable("versionId") String versionId, @PathVariable("worldName") String worldName, @RequestBody World world) throws IOException {
         return dashboardPropertiesService.setWorldProperties(world);
+    }
+
+    @DeleteMapping("/delete/{versionId}")
+    public String deleteServer(@PathVariable("versionId") String versionId) throws IOException {
+        return deleteService.deleteServer(versionId);
+    }
+
+    @DeleteMapping("/delete/{versionId}/{worldName}")
+    public String deleteServer(@PathVariable("versionId") String versionId, @PathVariable("worldName") String worldName) throws IOException {
+        return deleteService.deleteWorld(versionId,worldName);
     }
 }
