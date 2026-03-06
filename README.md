@@ -2,7 +2,7 @@
 
 ⬇️ **Download the Application**
 
- **[Download RedStone Setup](https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe)**
+ **[Download RedStone Setup]([https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe](https://github.com/PrinceKumar731/RedStone/releases/download/v1.0/redstone.zip))**
 
 ---
 
@@ -92,7 +92,7 @@ RedStone
 ### 1️⃣ Download the installer
 
 Download:  
-👉 **[RedStoneSetup.exe](https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe)**
+👉 **[RedStoneSetup.exe]([https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe](https://github.com/PrinceKumar731/RedStone/releases/download/v1.0/redstone.zip))**
 
 ### 2️⃣ Run the installer
 
