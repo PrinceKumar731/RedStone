@@ -17,9 +17,15 @@ public class ServerManager {
 
     private Process server;
 
+    private Path folderPath;
+
+    public ServerManager(PathService pathService) {
+        this.folderPath = pathService.getMinecraftDir();
+    }
+
     public String copyProperties(String versionId, String worldName) throws IOException {
         try{
-            Path path = Paths.get("C:\\minecraft-server", versionId);
+            Path path = folderPath.resolve(versionId);
 
             Path destination = path.resolve("server.properties");
             Path source = path.resolve("properties").resolve(worldName+".properties");
@@ -39,7 +45,7 @@ public class ServerManager {
 
     public void start(String versionId) {
         try {
-            Path serverFolder = Paths.get("C:\\minecraft-server", versionId);
+            Path serverFolder = folderPath.resolve(versionId);
 
             ProcessBuilder pb = new ProcessBuilder(
                     "java",

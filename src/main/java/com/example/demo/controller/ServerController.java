@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -93,5 +95,10 @@ public class ServerController {
     @DeleteMapping("/delete/{versionId}/{worldName}")
     public String deleteServer(@PathVariable("versionId") String versionId, @PathVariable("worldName") String worldName) throws IOException {
         return deleteService.deleteWorld(versionId,worldName);
+    }
+
+    @GetMapping("/serverLink")
+    public String getServerLink() throws SocketException, UnknownHostException {
+        return dashboardPropertiesService.getServerLink();
     }
 }

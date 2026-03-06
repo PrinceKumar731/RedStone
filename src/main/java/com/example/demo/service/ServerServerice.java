@@ -15,9 +15,14 @@ import java.util.List;
 
 @Service
 public class ServerServerice {
+    private Path folderPath;
+
+    public ServerServerice(PathService pathService) {
+        this.folderPath = pathService.getMinecraftDir();
+    }
 
     public List<VersionWithWorld> getAvailableServers(){
-        Path path = Paths.get("C:\\minecraft-server\\versions.json");
+        Path path = folderPath.resolve("versions.json");
         File file = path.toFile();
         ObjectMapper objectMapper = new ObjectMapper();
         List<VersionWithWorld> versions =

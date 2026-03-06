@@ -20,10 +20,14 @@ import java.util.List;
 
 @Service
 public class CreateWorldService {
-    private String folderPath = "C:\\minecraft-server";
+    private Path folderPath;
+
+    public CreateWorldService(PathService pathService) {
+        this.folderPath = pathService.getMinecraftDir();
+    }
 
     public String copyProperties(World world) throws IOException {
-        Path folder = Paths.get(folderPath,world.getVersionId(),"properties");
+        Path folder = folderPath.resolve(world.getVersionId()).resolve("properties");
         String finalAdress = world.getLevelName()+".properties";
 
         Path destination = folder.resolve(finalAdress);
@@ -34,16 +38,17 @@ public class CreateWorldService {
     }
 
     public void deleteProperties(World world) throws IOException {
-        Path folder = Paths.get(folderPath,world.getVersionId(),"properties");
+        Path folder = folderPath.resolve(world.getVersionId()).resolve("properties");
         String props = world.getLevelName()+".properties";
         Path destination = folder.resolve(props);
         Files.deleteIfExists(destination);
     }
 
+
     public String updateProperties(World world) throws IOException {
         try{
             String props = world.getLevelName()+".properties";
-            Path path = Paths.get(folderPath,world.getVersionId(),"properties",props);
+            Path path = folderPath.resolve(world.getVersionId()).resolve("properties").resolve(props);
             File file =  path.toFile();
             System.out.println("Updating properties file...");
             List<String> lines = Files.readAllLines(path);
@@ -86,9 +91,10 @@ public class CreateWorldService {
         }
     }
 
+
     public String updateVersionJson(World world) throws IOException {
         try{
-            Path path = Paths.get(folderPath,"versions.json");
+            Path path = folderPath.resolve("versions.json");
             File file = path.toFile();
             ObjectMapper objectMapper = new ObjectMapper();
             List<VersionWithWorld> versions =
@@ -115,7 +121,7 @@ public class CreateWorldService {
     }
 
     public void removeVersionJson(World world) throws IOException {
-        Path path = Paths.get(folderPath,"versions.json");
+        Path path = folderPath.resolve("versions.json");
         File file = path.toFile();
         ObjectMapper objectMapper = new ObjectMapper();
         List<VersionWithWorld> versions =
@@ -133,6 +139,7 @@ public class CreateWorldService {
         }
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, versions);
     }
+
 
     public String createWorld(World world) throws IOException {
         try {

@@ -11,15 +11,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class DeleteService {
-    private String folderPath = "C:\\minecraft-server";
+    private Path folderPath;
+
+    public DeleteService(PathService pathService) {
+        this.folderPath = pathService.getMinecraftDir();
+    }
 
     public String removeInVersionsJson(String versionId){
         try{
-            Path path = Paths.get(folderPath,"versions.json");
+            Path path = folderPath.resolve("versions.json");
             File file = path.toFile();
             ObjectMapper objectMapper = new ObjectMapper();
             List<VersionWithWorld> versions =
@@ -29,6 +34,7 @@ public class DeleteService {
             for(VersionWithWorld versionWithWorld : versions){
                 if(versionWithWorld.getVersionId().equals(versionId)){
                     versions.remove(versionWithWorld);
+                    break;
                 }
             }
 
@@ -42,9 +48,16 @@ public class DeleteService {
 
     public String removeServer(String versionId){
         try{
-            Path path = Paths.get(folderPath,versionId);
-            Files.delete(path);
-
+            Path path = folderPath.resolve(versionId);
+            Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(p -> {
+                        try {
+                            Files.delete(p);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
             return "Success";
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -54,10 +67,12 @@ public class DeleteService {
 
     public String deleteServer(String versionId) throws IOException {
         try{
+            System.out.println("remove version");
             if(removeInVersionsJson(versionId).equals("Failure"))throw new RuntimeException();
-
-            if(deleteServer(versionId).equals("Failure"))throw new RuntimeException();
-
+            System.out.println("finished remove version");
+            System.out.println("delete version");
+            if(removeServer(versionId).equals("Failure"))throw new RuntimeException();
+            System.out.println("finished delete version");
             return "Success";
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -69,7 +84,7 @@ public class DeleteService {
 
     public String deleteWorldProperties(String versionId,String worldName) throws IOException {
         try{
-            Path filePath = Paths.get(folderPath, versionId, "properties", worldName + ".properties");
+            Path filePath = folderPath.resolve(versionId).resolve("properties").resolve(worldName+".properties");
             Files.deleteIfExists(filePath);
             return "Success";
         }catch(Exception e){
@@ -81,8 +96,16 @@ public class DeleteService {
 
     public String deleteWorldFile(String versionId,String worldName) throws IOException {
         try{
-            Path filePath = Paths.get(folderPath, versionId, "properties", worldName );
-            Files.deleteIfExists(filePath);
+            Path filePath = folderPath.resolve(versionId).resolve(worldName);
+            Files.walk(filePath)
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(p -> {
+                        try {
+                            Files.delete(p);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
             return "Success";
         }catch(Exception e){
             e.printStackTrace();
@@ -93,7 +116,7 @@ public class DeleteService {
 
     public String updateVersionsJson(String versionId, String worldName){
         try{
-            Path path = Paths.get(folderPath,"versions.json");
+            Path path = folderPath.resolve("versions.json");
             File file = path.toFile();
             ObjectMapper objectMapper = new ObjectMapper();
             List<VersionWithWorld> versions =

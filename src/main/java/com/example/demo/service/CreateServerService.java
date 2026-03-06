@@ -19,18 +19,23 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class CreateServerService {
+    private Path folderPath;
 
     private final WebClient webClient;
 
-    public CreateServerService(WebClient.Builder builder) {
+
+    public CreateServerService(WebClient.Builder builder,PathService pathService) {
         this.webClient = builder
                 .build();
+        this.folderPath = pathService.getMinecraftDir();
     }
 
     public List<String> getOfflineVersions(){
         List<String> offlineVersions = new ArrayList<>();
-        File folders = new File("C:\\minecraft-server");
+
+        File folders = folderPath.toFile();
         File[] listOfFiles = folders.listFiles();
+
         for (File file : listOfFiles) {
             if(file.getName().endsWith(".json")){continue;}
             offlineVersions.add(file.getName());
@@ -84,9 +89,35 @@ public class CreateServerService {
         return downloadUrl;
     }
 
+    public String updateVersionJson(String VersionId, Boolean eula){
+        try{
+            Path path = folderPath.resolve("versions.json");
+            File file = path.toFile();
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<VersionWithWorld> versions =
+                    objectMapper.readValue(file,
+                            new TypeReference<List<VersionWithWorld>>() {});
+
+            VersionWithWorld version = new VersionWithWorld();
+            version.setVersionId(VersionId);
+            version.setEula(eula);
+            version.setWorlds(new ArrayList<>());
+
+            versions.add(version);
+
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, versions);
+
+            return "Success";
+
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+            return "Failure";
+        }
+    }
+
     public String downloadVersion(String versionId) {
 
-        Path downloadPath = Paths.get("C:\\minecraft-server", versionId);
+        Path downloadPath = folderPath.resolve(versionId);
 
         try {
 
@@ -109,6 +140,7 @@ public class CreateServerService {
                 );
             }
             System.out.println("Successs");
+            updateVersionJson(versionId,false);
             return "Success";
 
         } catch (Exception e) {
@@ -125,7 +157,7 @@ public class CreateServerService {
 
     public String startServer(String versionId) throws IOException, InterruptedException {
         try{
-            Path serverFolder = Paths.get("C:\\minecraft-server", versionId);
+            Path serverFolder = folderPath.resolve(versionId);
 
             ProcessBuilder pb = new ProcessBuilder(
                     "java",
@@ -173,21 +205,21 @@ public class CreateServerService {
         }
     }
 
-    public String updateVersionJson(String VersionId, Boolean eula){
+    public String updateEula(String versionId, Boolean eula){
         try{
-            Path path = Paths.get("C:\\minecraft-server\\versions.json");
+            Path path = folderPath.resolve("versions.json");
             File file = path.toFile();
             ObjectMapper objectMapper = new ObjectMapper();
             List<VersionWithWorld> versions =
                     objectMapper.readValue(file,
                             new TypeReference<List<VersionWithWorld>>() {});
 
-            VersionWithWorld version = new VersionWithWorld();
-            version.setVersionId(VersionId);
-            version.setEula(eula);
-            version.setWorlds(new ArrayList<>());
-
-            versions.add(version);
+           for(VersionWithWorld version : versions){
+               if(version.getVersionId().equals(versionId)){
+                   version.setEula(eula);
+                   break;
+               }
+           }
 
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, versions);
 
@@ -201,8 +233,7 @@ public class CreateServerService {
 
     public String agreeToEula(String versionId) throws IOException {
 
-        Path path = Paths.get("C:\\minecraft-server", versionId, "eula.txt");
-
+        Path path = folderPath.resolve(versionId).resolve("eula.txt");
         if (!Files.exists(path)) {
             return "Failure";
         }
@@ -233,7 +264,7 @@ public class CreateServerService {
 
             System.out.println("Step 1: Preparing server folder...");
 
-            Path serverFolder = Paths.get("C:\\minecraft-server", versionId);
+            Path serverFolder = folderPath.resolve(versionId);
 
             String started = startServer(versionId);
             if(started.equals("Failure"))throw new RuntimeException("Server started successfully");
@@ -281,10 +312,8 @@ public class CreateServerService {
 
             return "Failure";
         } finally {
-            updateVersionJson(versionId, eula);
+            updateEula(versionId, eula);
         }
     }
-
-
 
 }

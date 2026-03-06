@@ -5,6 +5,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,12 +16,16 @@ import java.util.List;
 
 @Service
 public class DashboardPropertiesService {
-    private String folderPath = "C:\\minecraft-server";
+    private Path folderPath;
+
+    public DashboardPropertiesService(PathService pathService) {
+        this.folderPath = pathService.getMinecraftDir();
+    }
 
     public String setWorldProperties(World world) throws IOException {
         try{
             String props = world.getLevelName()+".properties";
-            Path path = Paths.get(folderPath,world.getVersionId(),"properties",props);
+            Path path = folderPath.resolve(world.getVersionId()).resolve("properties").resolve(props);
             System.out.println("Updating properties file...");
             List<String> lines = Files.readAllLines(path);
 
@@ -66,7 +74,7 @@ public class DashboardPropertiesService {
 
         String props = worldName + ".properties";
 
-        Path path = Paths.get(folderPath, versionId, "properties", props);
+        Path path = folderPath.resolve(versionId).resolve("properties").resolve(props);
 
         System.out.println("Reading properties file...");
 
@@ -105,5 +113,15 @@ public class DashboardPropertiesService {
         System.out.println("Properties loaded successfully");
 
         return world;
+    }
+
+    public String getServerLink() throws SocketException, UnknownHostException {
+        DatagramSocket socket = new DatagramSocket();
+        socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+
+        String ip = socket.getLocalAddress().getHostAddress();
+        socket.close();
+
+        return ip+":25565";
     }
 }
