@@ -101,7 +101,7 @@ public class DeleteService {
                     .sorted(Comparator.reverseOrder())
                     .forEach(p -> {
                         try {
-                            Files.delete(p);
+                            Files.deleteIfExists(p);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
