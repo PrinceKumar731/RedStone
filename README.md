@@ -1,176 +1,220 @@
-RedStone
+# RedStone
 
-RedStone is a desktop Minecraft server manager that allows users to easily create, manage, and run Minecraft servers locally through a modern web dashboard.
+⬇️ **Download the Application**
 
-The application bundles a Spring Boot backend, React frontend, and a custom installer, allowing users to run Minecraft servers without manually configuring Java or server files.
+👉 **[Download RedStone Setup](https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe)**
 
-Features
+---
 
-Create Minecraft servers for different versions
+RedStone is a **desktop Minecraft server manager** that allows users to easily create, manage, and run Minecraft servers locally through a modern web dashboard.
 
-Manage multiple worlds per server
+The application bundles a **Spring Boot backend, React frontend, and a custom installer**, allowing users to run Minecraft servers without manually configuring Java or server files.
 
-Accept Minecraft EULA automatically
+---
 
-Start and stop servers from a dashboard
+# Features
 
-Download server versions automatically
+- Create Minecraft servers for different versions
+- Manage multiple worlds per server
+- Accept Minecraft EULA automatically
+- Start and stop servers from a dashboard
+- Download server versions automatically
+- Real-time server console output
+- Automatic browser launch on startup
+- Bundled Java runtime (no manual installation required)
+- Windows installer for easy setup
 
-Real-time server console output
+---
 
-Automatic browser launch on startup
+# Architecture
 
-Bundled Java runtime (no manual installation required)
+RedStone is built using a **full-stack architecture**.
 
-Windows installer for easy setup
+| Layer | Technology |
+|------|------|
+| Frontend | React (Dashboard UI) |
+| Backend | Spring Boot (Server Management API) |
+| Server Management | Local Minecraft server processes |
+| Packaging | Java JAR + bundled JDK + Windows installer |
 
-Architecture
+### Flow
 
-RedStone is built using a full-stack architecture:
-
-Frontend
-React (Dashboard UI)
-
-Backend
-Spring Boot (Server management API)
-
-Server Management
-Local Minecraft server processes
-
-Packaging
-Java JAR + bundled JDK + Windows installer
-
+```
 User
- │
- ▼
+  │
+  ▼
 React Dashboard
- │
- ▼
+  │
+  ▼
 Spring Boot API
- │
- ▼
+  │
+  ▼
 Minecraft Server Process
-Project Structure
+```
+
+---
+
+# Project Structure
+
+```
 RedStone
 │
-├── frontend/          # React dashboard
+├── frontend/                # React dashboard
 │
-├── backend/           # Spring Boot API
-│   └── minecraft-server/
-│       └── versions.json
+├── backend/                 # Spring Boot API
 │
-├── screenshots/       # UI screenshots
+├── minecraft-server/
+│   └── versions.json
+│
+├── screenshots/             # UI screenshots
 │
 ├── README.md
 └── .gitignore
-Screenshots
-Dashboard
+```
 
-Create Server
+---
 
-Server Running
+# Screenshots
 
-Installation
+### Dashboard
+![Dashboard](assets/Screenshot 2026-03-06 222911.png)
 
-Download the installer:
+### Create Server
+![Create Server](assets/Screenshot 2026-03-06 222541.png)
 
-Download:
-RedStoneSetup.exe
+### Server Running
+![Server Running](assets/Screenshot 2026-03-06 223125.png)
 
-Run the installer and follow the setup steps.
+---
+
+# Installation
+
+### 1️⃣ Download the installer
+
+Download:  
+👉 **[RedStoneSetup.exe](https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe)**
+
+### 2️⃣ Run the installer
+
+Follow the installation steps.
+
+### 3️⃣ Start RedStone
 
 After installation:
 
-Launch RedStone
+- Launch **RedStone**
+- The dashboard will open automatically in your browser
+- Create a server
+- Share your IP with friends and start playing
 
-The dashboard will open automatically in your browser
+---
 
-Create a server
+# Requirements
 
-Share your IP with friends and start playing
+| Requirement | Details |
+|-------------|---------|
+| Operating System | Windows 10 or later |
+| Internet | Required to download Minecraft server versions |
+| Java | Not required (bundled with RedStone) |
 
-Requirements
+---
 
-Operating System
-Windows 10 or later
-
-Internet connection required for downloading Minecraft server versions.
-
-Java installation is not required, as RedStone bundles its own runtime.
-
-How It Works
+# How It Works
 
 When RedStone starts:
 
-The backend server launches on localhost:8080
+1. The backend server launches on  
+   **http://localhost:8080**
 
-The browser automatically opens the dashboard
+2. The browser automatically opens the dashboard.
 
-The application manages Minecraft servers inside
+3. Minecraft servers are managed inside:
 
+```
 minecraft-server/
-   ├── versions.json
-   └── <version>/
-       └── <worlds>
+│
+├── versions.json
+└── <server folders>
+```
 
-Server versions and worlds are tracked in versions.json.
+Server versions and worlds are tracked inside **versions.json**.
 
-Development Setup
+---
 
-Clone the repository
+# Development Setup
 
+### Clone the repository
+
+```bash
 git clone https://github.com/yourusername/redstone.git
-Run Backend
+```
+
+---
+
+### Run Backend
+
+```bash
 cd backend
 mvn spring-boot:run
-Run Frontend
+```
+
+---
+
+### Run Frontend
+
+```bash
 cd frontend
 npm install
 npm start
+```
 
 Frontend runs on:
 
+```
 http://localhost:3000
+```
 
 Backend runs on:
 
+```
 http://localhost:8080
-Packaging
+```
 
-Production build process:
+---
 
-Frontend
+# Packaging
 
+### 1️⃣ Build Frontend
+
+```bash
 npm run build
+```
 
 Copy the build into:
 
+```
 backend/src/main/resources/static
+```
 
-Backend
+---
 
+### 2️⃣ Build Backend
+
+```bash
 mvn clean package
+```
 
-This generates the final JAR used by the installer.
+This generates the **final JAR used by the installer**.
 
-Future Improvements
+---
 
-Cross-platform support (Linux / Mac)
+# License
 
-Server performance monitoring
+This project is licensed under the **MIT License**.
 
-Plugin management
+---
 
-Automatic updates
+# Author
 
-Cloud server deployment
-
-License
-
-This project is licensed under the MIT License.
-
-Author
-
-Prince Kumar
-
-AIT Pun
+**Prince Kumar**  
+AIT Pune
