@@ -2,13 +2,26 @@
 
 ⬇️ **Download the Application**
 
-👉 **[Download RedStone Setup](https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe)**
+ **[Download RedStone Setup](https://github.com/yourusername/redstone/releases/latest/download/RedStoneSetup.exe)**
 
 ---
 
 RedStone is a **desktop Minecraft server manager** that allows users to easily create, manage, and run Minecraft servers locally through a modern web dashboard.
 
 The application bundles a **Spring Boot backend, React frontend, and a custom installer**, allowing users to run Minecraft servers without manually configuring Java or server files.
+
+---
+
+## Screenshots
+
+## Dashboard
+![Dashboard](assets/Screenshot%202026-03-06%20222911.png)
+
+## Create Server
+![Create Server](assets/Screenshot%202026-03-06%20222541.png)
+
+## Server Running
+![Server Running](assets/Screenshot%202026-03-06%20223125.png)
 
 ---
 
@@ -71,19 +84,6 @@ RedStone
 ├── README.md
 └── .gitignore
 ```
-
----
-
-# Screenshots
-
-### Dashboard
-![Dashboard](assets/Screenshot 2026-03-06 222911.png)
-
-### Create Server
-![Create Server](assets/Screenshot 2026-03-06 222541.png)
-
-### Server Running
-![Server Running](assets/Screenshot 2026-03-06 223125.png)
 
 ---
 
