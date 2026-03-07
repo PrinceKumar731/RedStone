@@ -2,8 +2,7 @@
 
 ⬇️ **Download the Application**
 
- **[Download RedStone Setup]([https://github.com/PrinceKumar731/RedStone/releases/download/v1.0/redstone.zip](https://github.com/PrinceKumar731/RedStone/releases/download/v1.0/redstone.zip))**
-
+**[Download RedStone Setup](https://github.com/PrinceKumar731/RedStone/releases/download/v1.0/redstone.zip)**
 ---
 
 RedStone is a **desktop Minecraft server manager** that allows users to easily create, manage, and run Minecraft servers locally through a modern web dashboard.
